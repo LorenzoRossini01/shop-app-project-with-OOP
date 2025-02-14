@@ -84,9 +84,14 @@ class Product {
 }
 
 class Component {
-  constructor(renderHookId) {
+  constructor(renderHookId, shouldRender = true) {
     this.hookId = renderHookId;
+    if (shouldRender) {
+      this.render();
+    }
   }
+
+  render() {}
   createRootElement(tag, cssClasses, attributes) {
     const element = document.createElement(tag);
     if (cssClasses) {
@@ -152,27 +157,37 @@ class Cart extends Component {
 }
 
 class ProductList extends Component {
+  products = [];
   constructor(renderHookId) {
     super(renderHookId);
+    this.fetchProducts();
   }
-  products = products;
+
+  fetchProducts() {
+    this.products = [...products];
+    this.renderProducts();
+  }
+
+  renderProducts() {
+    this.products.forEach((product) => {
+      new ProductItem(product, "prod-list");
+    });
+  }
   render() {
     const prodList = this.createRootElement("ul", "product-list", [
       new ElementAttribute("id", "prod-list"),
     ]);
     prodList.id = "prod-list";
-    for (const prod of this.products) {
-      const prodItem = new ProductItem(prod, "prod-list");
-
-      prodItem.render();
+    if (this.products && this.products.length > 0) {
+      this.renderProducts();
     }
   }
 }
-const cart = new Cart();
 class ProductItem extends Component {
   constructor(product, renderHookId) {
-    super(renderHookId);
+    super(renderHookId, false);
     this.product = product;
+    this.render();
   }
   addToCart() {
     App.addToCart(this.product);
@@ -195,13 +210,14 @@ class ProductItem extends Component {
     addCartBtnEl.addEventListener("click", this.addToCart.bind(this));
   }
 }
-class Shop {
+class Shop extends Component {
+  constructor() {
+    super();
+  }
   render() {
     this.cart = new Cart("app");
-    this.cart.render();
 
-    const productList = new ProductList("app");
-    productList.render();
+    new ProductList("app");
   }
 }
 
@@ -209,7 +225,6 @@ class App {
   static cart;
   static init() {
     const shop = new Shop();
-    shop.render();
     this.cart = shop.cart;
   }
 
