@@ -130,13 +130,25 @@ class Cart extends Component {
     )}</h2>`;
   }
 
+  orderProducts() {
+    console.log("Ordering...");
+    console.log(this.items);
+  }
+
   render() {
     const cartEl = this.createRootElement("section", "cart");
     cartEl.innerHTML = `
     <h2>Total: $${0}</h2>
-    <button>Order Nw!</button>
-    <ul id="cart-list"></ul>`;
-
+    <button>Order Now!</button>
+    `;
+    const orderButtonEl = cartEl.querySelector("button");
+    orderButtonEl.addEventListener("click", () => {
+      if (this.items.length > 0) {
+        this.orderProducts();
+      } else {
+        alert("Your cart is empty!");
+      }
+    });
     this.totalOutput = cartEl.querySelector("h2");
     return cartEl;
   }
