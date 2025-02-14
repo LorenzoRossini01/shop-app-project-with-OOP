@@ -152,21 +152,20 @@ class Cart extends Component {
 }
 
 class ProductList extends Component {
-  constructor(products, renderHookId) {
+  constructor(renderHookId) {
     super(renderHookId);
-    this.products = products;
   }
+  products = products;
   render() {
     const prodList = this.createRootElement("ul", "product-list", [
       new ElementAttribute("id", "prod-list"),
     ]);
-    // prodList.id = "prod-list";
+    prodList.id = "prod-list";
     for (const prod of this.products) {
       const prodItem = new ProductItem(prod, "prod-list");
 
       prodItem.render();
     }
-    return prodList;
   }
 }
 const cart = new Cart();
@@ -201,7 +200,7 @@ class Shop {
     this.cart = new Cart("app");
     this.cart.render();
 
-    const productList = new ProductList(products, "app");
+    const productList = new ProductList("app");
     productList.render();
   }
 }
