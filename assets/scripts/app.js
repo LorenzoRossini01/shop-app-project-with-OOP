@@ -169,19 +169,20 @@ class Cart extends Component {
 }
 
 class ProductList extends Component {
-  products = [];
+  #products = [];
   constructor(renderHookId) {
-    super(renderHookId);
+    super(renderHookId, false);
+    this.render();
     this.fetchProducts();
   }
 
   fetchProducts() {
-    this.products = [...products];
+    this.#products = [...products];
     this.renderProducts();
   }
 
   renderProducts() {
-    this.products.forEach((product) => {
+    this.#products.forEach((product) => {
       new ProductItem(product, "prod-list");
     });
   }
@@ -190,7 +191,7 @@ class ProductList extends Component {
       new ElementAttribute("id", "prod-list"),
     ]);
     prodList.id = "prod-list";
-    if (this.products && this.products.length > 0) {
+    if (this.#products && this.#products.length > 0) {
       this.renderProducts();
     }
   }
